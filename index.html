@@ -124,7 +124,7 @@ h1 .air::after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:2
 .strip .head{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--red);box-shadow:0 0 14px rgba(255,59,48,.8);transform:translateX(-50%)}
 .strip .cap{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:14px;color:var(--dim);pointer-events:none}
 .strip .cap b{color:var(--ink);font-weight:560}
-.demo{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:30px 24px 6px}
+.demo{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:30px 24px 30px}
 .rk{text-align:center;padding:70px 24px 0}
 .rk h2{margin:0 auto}
 .rk .sub{margin:14px auto 0}
@@ -222,7 +222,6 @@ dd b{color:var(--ink);font-weight:520}
 
 <section id="top"><div class="wrap hero">
   <div>
-    <div class="pill"><span class="d"></span>pre-mint · no coin yet · board empty</div>
     <img class="mark" src="/assets/mark.png" alt="">
     <h1>Token fees, plugged <span class="air"><em>on air</em></span> by the host.</h1>
     <div class="spec"><span>any podcast or stream</span><span>the fee buys the read</span><span>nothing to claim</span></div>
@@ -236,7 +235,7 @@ dd b{color:var(--ink);font-weight:520}
       <div class="card" id="card"></div>
     </div>
   </div>
-  <div class="rows" id="rows"><div class="lb">Shows you could launch on</div><div class="flow" id="flow"><div class="track" id="track">
+  <div class="rows" id="rows"><div class="flow" id="flow"><div class="track" id="track">
 <button class="srow" data-u="https://x.com/joerogan" data-kind="podcast"><div><div class="n">Joe Rogan</div><div class="h">@joerogan <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=joerogan" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
 <button class="srow" data-u="https://x.com/TheoVon" data-kind="podcast"><div><div class="n">Theo Von</div><div class="h">@TheoVon <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=TheoVon" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
 <button class="srow" data-u="https://x.com/MarketBubble" data-kind="stream"><div><div class="n">Market Bubble</div><div class="h">@MarketBubble <i>· stream</i></div></div><div class="pair"><img src="/api/avatar?h=MarketBubble" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
@@ -313,7 +312,6 @@ dd b{color:var(--ink);font-weight:520}
     <button class="btn" id="hear">Hear it</button>
     <button class="btn ghost" id="stop" style="display:none">Stop</button>
     <div class="say" id="say">“This episode is brought to you by <b>$PLUG</b>.”</div>
-    <div class="small">This is your browser's voice, not a host's. Real reads are recorded by the host and posted as clips with a timestamp.</div>
   </div>
 </section>
 
