@@ -32,10 +32,22 @@ nav a{font-size:14px;color:var(--dim);font-weight:500;transition:color .2s;paddi
 nav a:hover,nav a.on{color:var(--ink)}
 nav a.on{border-bottom-color:var(--red)}
 
+/* launchpad chrome: tape + background canvas + status pill */
+.tape{position:relative;z-index:1;overflow:hidden;border-bottom:1px solid var(--line);background:rgba(10,10,11,.6);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tapein{display:flex;gap:40px;width:max-content;padding:9px 0;animation:tape 80s linear infinite;font-family:Plex,ui-monospace,monospace;font-size:12px;color:var(--dim2);letter-spacing:.02em;white-space:nowrap}
+.tapein b{color:var(--dim);font-weight:500}
+.tapein span::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin-right:10px;vertical-align:1px;opacity:.7}
+@keyframes tape{to{transform:translateX(-50%)}}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.pill{display:inline-flex;align-items:center;gap:8px;font-family:Plex,ui-monospace,monospace;font-size:12px;color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:6px 12px;margin-bottom:26px;background:rgba(21,21,22,.8)}
+.pill .d{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
 /* hero */
 #top{padding:88px 0 40px;min-height:calc(100svh - 60px);display:flex;align-items:center}
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center;width:100%}
-.mark{width:44px;height:44px;margin-bottom:26px;display:block}
+.mark{width:44px;height:44px;margin-bottom:26px;display:block;position:relative}
+.hero .mark{filter:drop-shadow(0 0 12px rgba(255,59,48,.25))}
 h1{font-size:clamp(40px,5.4vw,66px);line-height:1.02;font-weight:640;letter-spacing:-.035em;max-width:11ch}
 h1 em{font-style:normal;color:var(--red)}
 h1 .air{position:relative;white-space:nowrap}
@@ -205,15 +217,17 @@ dd b{color:var(--ink);font-weight:520}
 <li><a href="/docs.html">Docs</a></li>
 <li><a href="https://x.com/" target="_blank" rel="noopener">X</a></li>
 </ul></nav>
+<div class="tape" aria-hidden="true"><div class="tapein"><span><b>@joerogan</b> · podcast · launchable</span><span><b>@TheoVon</b> · podcast · launchable</span><span><b>@MarketBubble</b> · stream · launchable</span><span><b>@Cented7</b> · stream · launchable</span><span><b>@blknoiz06</b> · X Spaces · launchable</span><span><b>@lexfridman</b> · podcast · launchable</span><span><b>@andrewschulz</b> · podcast · launchable</span><span><b>@notthreadguy</b> · stream · launchable</span><span><b>@MarioNawfal</b> · X Spaces · launchable</span><span><b>@LoganPaul</b> · podcast · launchable</span><span><b>@ShannonSharpe</b> · podcast · launchable</span><span><b>@APompliano</b> · podcast · launchable</span><span><b>@Banks</b> · stream · launchable</span><span><b>@coinbureau</b> · podcast · launchable</span><span><b>@PBDsPodcast</b> · podcast · launchable</span><span><b>@Unchained_pod</b> · podcast · launchable</span><span><b>@therollupco</b> · podcast · launchable</span><span><b>@joerogan</b> · podcast · launchable</span><span><b>@TheoVon</b> · podcast · launchable</span><span><b>@MarketBubble</b> · stream · launchable</span><span><b>@Cented7</b> · stream · launchable</span><span><b>@blknoiz06</b> · X Spaces · launchable</span><span><b>@lexfridman</b> · podcast · launchable</span><span><b>@andrewschulz</b> · podcast · launchable</span><span><b>@notthreadguy</b> · stream · launchable</span><span><b>@MarioNawfal</b> · X Spaces · launchable</span><span><b>@LoganPaul</b> · podcast · launchable</span><span><b>@ShannonSharpe</b> · podcast · launchable</span><span><b>@APompliano</b> · podcast · launchable</span><span><b>@Banks</b> · stream · launchable</span><span><b>@coinbureau</b> · podcast · launchable</span><span><b>@PBDsPodcast</b> · podcast · launchable</span><span><b>@Unchained_pod</b> · podcast · launchable</span><span><b>@therollupco</b> · podcast · launchable</span></div></div>
+<canvas id="bg" aria-hidden="true"></canvas>
 
 <section id="top"><div class="wrap hero">
   <div>
+    <div class="pill"><span class="d"></span>pre-mint · no coin yet · board empty</div>
     <img class="mark" src="/assets/mark.png" alt="">
     <h1>Token fees, plugged <span class="air"><em>on air</em></span> by the host.</h1>
     <div class="spec"><span>any podcast or stream</span><span>the fee buys the read</span><span>nothing to claim</span></div>
     <p class="lead">Launch a coin on a show. <b>100% of the creator fee</b> buys that host's own ad read, at their own rate, the way any sponsor buys one. They say your ticker on air. <b>The receipt is the clip.</b></p>
     <div class="ctl">
-      <label for="show">One input. The show.</label>
       <div class="row">
         <input class="in" id="show" placeholder="Paste a show — a podcast link, a channel, or an @handle" autocomplete="off" spellcheck="false">
         <button class="btn" id="go">Plug it</button>
@@ -392,6 +406,27 @@ dd b{color:var(--ink);font-weight:520}
       if(lit){ x.fillStyle='#ff3b30'; x.fillRect(c.width*0.58,0,2,c.height); }
       t++; if(!reduced && !document.hidden) requestAnimationFrame(draw); }
     draw(); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) draw(); }); });
+
+  /* background: equaliser skyline along the bottom, broadcast rings from the mark, drifting specks */
+  const bg=$('#bg'), bx=bg.getContext('2d'); let BW=0,BH=0; const specks=[]; const rings=[]; let eq=[]; let lastRing=0;
+  function bsize(){ const d=Math.min(devicePixelRatio||1,2); BW=innerWidth; BH=innerHeight; bg.width=BW*d; bg.height=BH*d; bx.setTransform(d,0,0,d,0,0);
+    eq=Array.from({length:Math.ceil(BW/18)+1},(_,i)=>({v:Math.random(),t:Math.random()*6.28,s:0.4+Math.random()*0.8}));
+    specks.length=0; for(let i=0;i<Math.min(90,BW/14);i++) specks.push({x:Math.random()*BW,y:Math.random()*BH,r:Math.random()*1.4+0.3,v:0.06+Math.random()*0.2,a:Math.random()}); }
+  bsize(); addEventListener('resize',bsize);
+  function bgTick(ts){
+    bx.clearRect(0,0,BW,BH);
+    // specks
+    for(const p of specks){ p.y-=p.v; p.a+=0.01; if(p.y<-4){p.y=BH+4;p.x=Math.random()*BW;} const al=0.18+0.16*Math.sin(p.a); bx.fillStyle=`rgba(245,245,245,${al})`; bx.beginPath(); bx.arc(p.x,p.y,p.r,0,6.28); bx.fill(); }
+    // equaliser skyline
+    const base=BH; const w=18;
+    for(let i=0;i<eq.length;i++){ const e=eq[i]; e.t+=0.012*e.s; const h=18+Math.abs(Math.sin(e.t))*(60+e.v*90)*(0.7+0.3*Math.sin(ts/4000+i*0.3));
+      const red=(i%23===0); bx.fillStyle=red?'rgba(255,59,48,0.14)':'rgba(245,245,245,0.045)'; bx.fillRect(i*w+3,base-h,w-6,h); }
+    // rings from the mark
+    const mk=document.querySelector('.hero .mark'); if(mk && ts-lastRing>2600){ const r=mk.getBoundingClientRect(); if(r.bottom>0&&r.top<BH){ rings.push({x:r.left+r.width/2,y:r.top+r.height/2,t:ts}); lastRing=ts; } }
+    for(let i=rings.length-1;i>=0;i--){ const g=rings[i]; const k=(ts-g.t)/3000; if(k>=1){rings.splice(i,1);continue;} const rad=20+k*260; bx.strokeStyle=`rgba(255,59,48,${0.28*(1-k)})`; bx.lineWidth=1; bx.beginPath(); bx.arc(g.x,g.y,rad,0,6.28); bx.stroke(); }
+    if(!reduced && !document.hidden) requestAnimationFrame(bgTick);
+  }
+  requestAnimationFrame(bgTick); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) requestAnimationFrame(bgTick); });
 
   /* the read: big waveform strip + speech demo */
   const wc=$('#wave'), wx=wc.getContext('2d'); let W=0,H=0,dpr=1, bars=[], speaking=false, energy=0;
