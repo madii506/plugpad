@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PLUG — token fees, plugged on air by the host</title>
+<title>PLUG</title>
 <meta name="description" content="Launch a coin on any podcast or stream. 100% of creator fees buy the host's ad read. Your ticker, on their show, in their voice. Nothing to claim.">
 <meta property="og:title" content="PLUG — token fees, plugged on air by the host">
 <meta property="og:description" content="Launch a coin on any podcast or stream. The creator fee buys the host's ad read. The receipt is the clip.">
@@ -83,13 +83,17 @@ h1 .air::after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:2
 .card.err .nm{color:var(--dim)}
 
 /* show rows (right column) */
-.rows{display:flex;flex-direction:column;gap:12px;perspective:900px}
+.rows{display:flex;flex-direction:column;gap:12px}
+.flow{position:relative;height:520px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+.track{display:flex;flex-direction:column;gap:12px;will-change:transform;padding:6px 8px}
+.flow.paused .track{animation-play-state:paused}
+.srow .pair img.x{visibility:hidden}
 .rows .lb{font-size:12.5px;color:var(--dim2);margin-bottom:2px}
 .srow{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .25s,background .25s;text-align:left;color:inherit;font:inherit;width:100%}
 .srow:hover{transform:translateY(-2px) scale(1.01);border-color:var(--line2);background:var(--card2)}
-.srow.lit{background:var(--card2);border-color:var(--line2);transform:scale(1.03);box-shadow:0 20px 40px -20px #000}
+.srow.lit{background:var(--card2);border-color:var(--line2);transform:scale(1.03);box-shadow:0 20px 40px -20px #000;opacity:1}
 .srow .n{font-weight:620;font-size:19px;letter-spacing:-.01em}
-.srow .h{color:var(--dim);font-size:13px;margin-top:2px}
+.srow .h{color:var(--dim);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .srow .h i{font-style:normal;color:var(--dim2)}
 .srow .pair{display:flex;align-items:center;gap:10px}
 .srow .pair img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--card2)}
@@ -97,18 +101,21 @@ h1 .air::after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:2
 .srow .pair .tile{width:38px;height:38px;border-radius:50%;background:#242428;display:grid;place-items:center}
 .srow .pair .tile img{width:24px;height:24px;border-radius:0;background:none}
 .srow .wave{width:96px;height:30px;display:block}
-.srow:not(.lit){opacity:.62}
+.srow:not(.lit){opacity:.55}
 .srow:not(.lit):hover{opacity:1}
 .rows .fn{font-size:12px;color:var(--dim2);line-height:1.5;margin-top:4px}
 
 /* the read — demo strip */
 #read{position:relative;padding:0}
-.strip{position:relative;height:190px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:#0c0c0d}
+.strip{position:relative;height:240px;margin-top:40px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:#0c0c0d}
 .strip canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .strip .head{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--red);box-shadow:0 0 14px rgba(255,59,48,.8);transform:translateX(-50%)}
 .strip .cap{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:14px;color:var(--dim);pointer-events:none}
 .strip .cap b{color:var(--ink);font-weight:560}
-.demo{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:26px 24px 6px}
+.demo{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:30px 24px 6px}
+.rk{text-align:center;padding:70px 24px 0}
+.rk h2{margin:0 auto}
+.rk .sub{margin:14px auto 0}
 .demo .in{max-width:220px;flex:none;text-transform:uppercase;font-family:Plex,monospace;letter-spacing:.06em}
 .demo .say{color:var(--dim);font-size:14px;width:100%;text-align:center;margin-top:8px}
 .demo .say.on{color:var(--ink)}
@@ -208,32 +215,34 @@ dd b{color:var(--ink);font-weight:520}
     <div class="ctl">
       <label for="show">One input. The show.</label>
       <div class="row">
-        <input class="in" id="show" placeholder="Apple / Spotify / RSS · twitch.tv/ · kick.com/ · youtube.com/@ · @handle" autocomplete="off" spellcheck="false">
+        <input class="in" id="show" placeholder="Paste a show — a podcast link, a channel, or an @handle" autocomplete="off" spellcheck="false">
         <button class="btn" id="go">Plug it</button>
       </div>
-      <div class="hint" id="hint">Nothing is launched from this page. It reads the show, writes the pairing line, and sends you to pump.fun with it.</div>
+      <div class="hint" id="hint"></div>
       <div class="card" id="card"></div>
     </div>
   </div>
-  <div class="rows" id="rows">
-    <div class="lb">Shows you could launch on</div>
-    <button class="srow" data-u="https://x.com/joerogan"><div><div class="n">Joe Rogan</div><div class="h">@joerogan <i>· podcast</i></div></div><div class="pair"><img src="/assets/av/joerogan.jpg" alt=""><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
-    <button class="srow lit" data-u="https://x.com/Cented7"><div><div class="n">Cented</div><div class="h">@Cented7 <i>· stream</i></div></div><div class="pair"><img src="/assets/av/Cented7.jpg" alt=""><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
-    <button class="srow" data-u="https://x.com/blknoiz06"><div><div class="n">Ansem</div><div class="h">@blknoiz06 <i>· X Spaces</i></div></div><div class="pair"><img src="/assets/av/blknoiz06.jpg" alt=""><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
-    <div class="fn">Examples of the kind of show. None contacted, none endorsing anything, no coin launched on any of them. Click one to read it live.</div>
-  </div>
+  <div class="rows" id="rows"><div class="lb">Shows you could launch on</div><div class="flow" id="flow"><div class="track" id="track">
+<button class="srow" data-u="https://x.com/joerogan" data-kind="podcast"><div><div class="n">Joe Rogan</div><div class="h">@joerogan <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=joerogan" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/TheoVon" data-kind="podcast"><div><div class="n">Theo Von</div><div class="h">@TheoVon <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=TheoVon" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/MarketBubble" data-kind="stream"><div><div class="n">Market Bubble</div><div class="h">@MarketBubble <i>· stream</i></div></div><div class="pair"><img src="/api/avatar?h=MarketBubble" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/Cented7" data-kind="stream"><div><div class="n">Cented</div><div class="h">@Cented7 <i>· stream</i></div></div><div class="pair"><img src="/api/avatar?h=Cented7" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/blknoiz06" data-kind="X Spaces"><div><div class="n">Ansem</div><div class="h">@blknoiz06 <i>· X Spaces</i></div></div><div class="pair"><img src="/api/avatar?h=blknoiz06" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/lexfridman" data-kind="podcast"><div><div class="n">Lex Fridman</div><div class="h">@lexfridman <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=lexfridman" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/andrewschulz" data-kind="podcast"><div><div class="n">Andrew Schulz</div><div class="h">@andrewschulz <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=andrewschulz" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/notthreadguy" data-kind="stream"><div><div class="n">threadguy</div><div class="h">@notthreadguy <i>· stream</i></div></div><div class="pair"><img src="/api/avatar?h=notthreadguy" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/MarioNawfal" data-kind="X Spaces"><div><div class="n">Mario Nawfal</div><div class="h">@MarioNawfal <i>· X Spaces</i></div></div><div class="pair"><img src="/api/avatar?h=MarioNawfal" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/LoganPaul" data-kind="podcast"><div><div class="n">Logan Paul</div><div class="h">@LoganPaul <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=LoganPaul" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/ShannonSharpe" data-kind="podcast"><div><div class="n">Shannon Sharpe</div><div class="h">@ShannonSharpe <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=ShannonSharpe" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/APompliano" data-kind="podcast"><div><div class="n">Pomp</div><div class="h">@APompliano <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=APompliano" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/Banks" data-kind="stream"><div><div class="n">Banks</div><div class="h">@Banks <i>· stream</i></div></div><div class="pair"><img src="/api/avatar?h=Banks" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/coinbureau" data-kind="podcast"><div><div class="n">Coin Bureau</div><div class="h">@coinbureau <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=coinbureau" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/PBDsPodcast" data-kind="podcast"><div><div class="n">PBD Podcast</div><div class="h">@PBDsPodcast <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=PBDsPodcast" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/Unchained_pod" data-kind="podcast"><div><div class="n">Unchained</div><div class="h">@Unchained_pod <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=Unchained_pod" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+<button class="srow" data-u="https://x.com/therollupco" data-kind="podcast"><div><div class="n">The Rollup</div><div class="h">@therollupco <i>· podcast</i></div></div><div class="pair"><img src="/api/avatar?h=therollupco" alt="" loading="lazy" onerror="this.classList.add('x')"><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+</div></div></div>
 </div></section>
 
-<div id="read">
-  <div class="strip"><canvas id="wave"></canvas><div class="head"></div><div class="cap" id="cap">The read, before the read. Type a ticker and <b>hear the shape</b>.</div></div>
-  <div class="demo">
-    <input class="in" id="tick" placeholder="TICKER" maxlength="10" autocomplete="off" spellcheck="false">
-    <button class="btn" id="hear">Hear it</button>
-    <button class="btn ghost" id="stop" style="display:none">Stop</button>
-    <div class="say" id="say">“This episode is brought to you by <b>$PLUG</b>.”</div>
-    <div class="small">This is your browser's voice, not a host's. Real reads are recorded by the host and posted as clips with a timestamp.</div>
-  </div>
-</div>
 
 <section id="how"><div class="wrap">
   <div class="k">How it works</div>
@@ -283,15 +292,22 @@ dd b{color:var(--ink);font-weight:520}
   </dl>
 </div></section>
 
+<section id="read" style="padding:0 0 40px"><div class="wrap rk"><div class="k">The read</div><h2>Hear the shape before the first clip exists.</h2><p class="sub">Type a ticker. Your browser says the read out loud. The real one is a host, on their show, with a timestamp.</p></div>
+  <div class="strip"><canvas id="wave"></canvas><div class="head"></div><div class="cap" id="cap">Type a ticker and press <b>Hear it</b>.</div></div>
+  <div class="demo">
+    <input class="in" id="tick" placeholder="TICKER" maxlength="10" autocomplete="off" spellcheck="false">
+    <button class="btn" id="hear">Hear it</button>
+    <button class="btn ghost" id="stop" style="display:none">Stop</button>
+    <div class="say" id="say">“This episode is brought to you by <b>$PLUG</b>.”</div>
+    <div class="small">This is your browser's voice, not a host's. Real reads are recorded by the host and posted as clips with a timestamp.</div>
+  </div>
+</section>
+
 <section id="names"><div class="wrap">
   <div class="k">The names on the banner</div>
   <h2>Examples, not partners.</h2>
-  <div class="names">
-    <div class="name"><img src="/assets/av/joerogan.jpg" alt=""><div><b>Joe Rogan</b><span>@joerogan · a podcast</span></div></div>
-    <div class="name"><img src="/assets/av/Cented7.jpg" alt=""><div><b>Cented</b><span>@Cented7 · a stream</span></div></div>
-    <div class="name"><img src="/assets/av/blknoiz06.jpg" alt=""><div><b>Ansem</b><span>@blknoiz06 · an X Spaces host</span></div></div>
-  </div>
-  <p class="fine">They show the kind of show a coin could be launched on. <b>None of them have been contacted. None have agreed to anything. No coin has been launched on any of them.</b> Nothing on the banner or this page is a payout, a quote or an endorsement. If a coin launches on one of them and their booking address gets an email, that email is published like every other one. PLUG is not affiliated with any show, host or platform named here.</p>
+  <p class="sub">Every name on this page is a public account, read live. Nothing here is a payout, a quote or an endorsement.</p>
+  <p class="fine">Joe Rogan, Theo Von, Market Bubble, Cented, Ansem, Lex Fridman, Andrew Schulz, threadguy, Mario Nawfal, Logan Paul, Shannon Sharpe, Pomp, Banks, Coin Bureau, PBD Podcast, Unchained and The Rollup appear as examples of the kind of show a coin could be launched on, read live from their public profiles. <b>None of them have been contacted. None have agreed to anything. No coin has been launched on any of them.</b> Nothing on the banner or this page is a payout, a quote or an endorsement. If a coin launches on one of them and their booking address gets an email, that email is published like every other one. PLUG is not affiliated with any show, host or platform named here.</p>
 </div></section>
 
 <section id="end"><div class="wrap">
@@ -323,7 +339,7 @@ dd b{color:var(--ink);font-weight:520}
       return;
     }
     const img=d.image?`<img class="av ${d.kind==='podcast'?'':'round'}" src="${esc(d.image)}" alt="" onerror="this.style.visibility='hidden'">`:`<div class="av"></div>`;
-    const facts=[['Kind',d.kind],['Rate',d.rate==='none published'?'none published · booked by email at whatever they charge':d.rate],
+    const facts=[['Kind',kindOverride||d.kind],['Rate',d.rate==='none published'?'none published · booked by email at whatever they charge':d.rate],
       d.followers!=null?['Followers',Number(d.followers).toLocaleString('en-US')]:null, d.episodes!=null?['Episodes',d.episodes]:null,
       ['Fund','— · nothing accrues until a mint exists'],['Read by',d.ms+' ms']].filter(Boolean);
     card.innerHTML=`<div class="hd">${img}<div><div class="nm">${esc(d.title)}</div><div class="sb">${esc(d.handle||'')}</div></div><span class="kd ok">readable</span></div>
@@ -335,20 +351,41 @@ dd b{color:var(--ink);font-weight:520}
   }
   async function resolve(){
     const v=input.value.trim(); if(!v) { input.focus(); return; }
-    go.disabled=true; go.textContent='Reading…'; hint.textContent='Reading the show from this server. Nothing is launched.';
+    go.disabled=true; go.textContent='Reading…'; hint.textContent='Reading…';
     try{
       const r=await fetch('/api/show?u='+encodeURIComponent(v),{cache:'no-store'});
       const d=await r.json().catch(()=>({ok:false,reason:'the server answered with something that was not JSON'}));
       render(d);
     }catch{ render({ok:false,reason:'the reader is unreachable'}); }
     go.disabled=false; go.textContent='Plug it';
-    hint.textContent='Nothing is launched from this page. It reads the show, writes the pairing line, and sends you to pump.fun with it.';
+    hint.textContent='';
   }
   go.onclick=resolve; input.addEventListener('keydown',e=>{ if(e.key==='Enter') resolve(); });
-  $$('.srow').forEach(b=>b.onclick=()=>{ $$('.srow').forEach(x=>x.classList.remove('lit')); b.classList.add('lit'); input.value=b.dataset.u; resolve(); input.scrollIntoView({behavior:'smooth',block:'center'}); });
+  let kindOverride=null;
+  $$('.srow').forEach(b=>b.onclick=()=>{ kindOverride=b.dataset.kind||null; input.value=b.dataset.u; resolve(); pinned=b; input.scrollIntoView({behavior:'smooth',block:'center'}); });
+  input.addEventListener('input',()=>{ kindOverride=null; pinned=null; });
+
+  /* the flow: rows drift upward for ever; the row nearest the middle is lit */
+  const flow=$('#flow'), track=$('#track'); let pinned=null;
+  const clone=track.innerHTML; track.insertAdjacentHTML('beforeend',clone);
+  $$('#track .srow').slice(17).forEach(b=>b.onclick=()=>{ kindOverride=b.dataset.kind||null; input.value=b.dataset.u; resolve(); pinned=b; input.scrollIntoView({behavior:'smooth',block:'center'}); });
+  let y=0, last=performance.now(), half=0;
+  function measure(){ half=track.scrollHeight/2; } measure(); addEventListener('resize',measure);
+  flow.addEventListener('mouseenter',()=>flow.classList.add('paused')); flow.addEventListener('mouseleave',()=>flow.classList.remove('paused'));
+  function drift(now){
+    const dt=Math.min(64,now-last); last=now;
+    if(!flow.classList.contains('paused') && !reduced) y-=dt*0.022;
+    if(y<=0) y+=half;
+    track.style.transform='translateY('+(-y)+'px)';
+    const mid=flow.getBoundingClientRect().top+flow.clientHeight/2; let best=null,bd=1e9;
+    for(const r of track.children){ const b=r.getBoundingClientRect(); const d=Math.abs((b.top+b.bottom)/2-mid); if(d<bd){bd=d;best=r;} }
+    for(const r of track.children) r.classList.toggle('lit', r===(pinned||best));
+    if(!document.hidden) requestAnimationFrame(drift);
+  }
+  requestAnimationFrame(drift); document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ last=performance.now(); requestAnimationFrame(drift);} });
 
   /* row waveforms */
-  $$('.srow .wave').forEach((c,i)=>{ const x=c.getContext('2d'); const n=30, seed=i*7+3; let t=0;
+  $$('#track .wave').forEach((c,i)=>{ const x=c.getContext('2d'); const n=30, seed=i*7+3; let t=0;
     function draw(){ x.clearRect(0,0,c.width,c.height); const lit=c.closest('.srow').classList.contains('lit');
       for(let k=0;k<n;k++){ const p=k/n; const h=(0.35+0.65*Math.abs(Math.sin(p*9+seed+t*(lit?0.05:0.01))))*c.height*0.9*(0.5+0.5*Math.abs(Math.sin(k*1.7+seed)));
         const w=c.width/n; x.fillStyle=lit?(p<0.58?'#f5f5f5':'#4a4a50'):'#3a3a40'; x.beginPath(); x.roundRect(k*w+1,(c.height-h)/2,w-3,h,2); x.fill(); }
@@ -359,12 +396,12 @@ dd b{color:var(--ink);font-weight:520}
   /* the read: big waveform strip + speech demo */
   const wc=$('#wave'), wx=wc.getContext('2d'); let W=0,H=0,dpr=1, bars=[], speaking=false, energy=0;
   function size(){ dpr=Math.min(devicePixelRatio||1,2); W=wc.clientWidth; H=wc.clientHeight; wc.width=W*dpr; wc.height=H*dpr; wx.setTransform(dpr,0,0,dpr,0,0);
-    const n=Math.ceil(W/7)+2; while(bars.length<n) bars.push(0.08+Math.random()*0.12); bars.length=n; }
+    const n=Math.ceil(W/7)+2; while(bars.length<n) bars.push(0.1+Math.random()*0.22); bars.length=n; }
   size(); addEventListener('resize',size);
   let phase=0;
   function tick(){
     energy+= ((speaking?1:0)-energy)*0.06; phase+=0.9;
-    if(phase>=7){ phase-=7; bars.shift(); const base=0.06+Math.random()*0.1; const burst=speaking?Math.pow(Math.random(),1.6)*0.9:Math.random()<0.03?Math.random()*0.35:0; bars.push(Math.min(1,base+burst)); }
+    if(phase>=7){ phase-=7; bars.shift(); const base=0.1+Math.random()*0.22; const burst=speaking?Math.pow(Math.random(),1.6)*0.9:Math.random()<0.05?Math.random()*0.4:0; bars.push(Math.min(1,base+burst)); }
     wx.clearRect(0,0,W,H);
     const n=bars.length, w=7; const centre=W/2;
     for(let i=0;i<n;i++){ const x=i*w-phase; const v=bars[i]; const h=Math.max(3,v*H*0.72*(0.6+0.4*energy)+ (speaking?Math.sin(i*0.7+phase*0.3)*4:0));
