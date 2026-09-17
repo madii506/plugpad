@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLUG — token fees, plugged on air by the host</title>
+<meta name="description" content="Launch a coin on any podcast or stream. 100% of creator fees buy the host's ad read. Your ticker, on their show, in their voice. Nothing to claim.">
+<meta property="og:title" content="PLUG — token fees, plugged on air by the host">
+<meta property="og:description" content="Launch a coin on any podcast or stream. The creator fee buys the host's ad read. The receipt is the clip.">
+<meta property="og:image" content="/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/icon-32.png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<style>
+@font-face{font-family:Inter;src:url(/assets/inter.woff2) format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:Plex;src:url(/assets/plexmono.woff2) format('woff2');font-weight:400;font-display:swap}
+:root{--bg:#0a0a0b;--ink:#f5f5f5;--dim:#8d8d93;--dim2:#55555b;--card:#151516;--card2:#1c1c1e;--line:#232326;--line2:#2e2e33;--red:#ff3b30;--grid:#151517;--w:1180px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.5;letter-spacing:-.005em;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 35%,#000 30%,transparent 100%);mask-image:radial-gradient(ellipse 70% 60% at 50% 35%,#000 30%,transparent 100%)}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--red);color:#fff}
+.mono{font-family:Plex,ui-monospace,monospace;font-size:12.5px;letter-spacing:.02em}
+.wrap{position:relative;z-index:1;max-width:var(--w);margin:0 auto;padding:0 24px}
+
+/* nav — links only, centred, nothing in the corners */
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(10,10,11,.72);border-bottom:1px solid transparent;transition:border-color .3s}
+nav.stuck{border-bottom-color:var(--line)}
+nav ul{list-style:none;display:flex;justify-content:center;gap:34px;padding:18px 24px;flex-wrap:wrap}
+nav a{font-size:14px;color:var(--dim);font-weight:500;transition:color .2s;padding:4px 0;border-bottom:1px solid transparent}
+nav a:hover,nav a.on{color:var(--ink)}
+nav a.on{border-bottom-color:var(--red)}
+
+/* hero */
+#top{padding:88px 0 40px;min-height:calc(100svh - 60px);display:flex;align-items:center}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center;width:100%}
+.mark{width:44px;height:44px;margin-bottom:26px;display:block}
+h1{font-size:clamp(40px,5.4vw,66px);line-height:1.02;font-weight:640;letter-spacing:-.035em;max-width:11ch}
+h1 em{font-style:normal;color:var(--red)}
+h1 .air{position:relative;white-space:nowrap}
+h1 .air::after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:2px;background:var(--red);transform-origin:left;animation:sweep 3.2s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes sweep{0%{transform:scaleX(0)}45%{transform:scaleX(1);transform-origin:left}46%{transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+.spec{margin-top:22px;color:var(--dim);font-size:15px;display:flex;flex-wrap:wrap;gap:0 10px}
+.spec span+span::before{content:"·";margin-right:10px;color:var(--dim2)}
+.lead{margin-top:28px;color:var(--dim);font-size:17px;max-width:52ch}
+.lead b{color:var(--ink);font-weight:560}
+
+/* launch control */
+.ctl{margin-top:34px;max-width:560px}
+.ctl label{display:block;font-size:12.5px;color:var(--dim2);margin-bottom:8px}
+.row{display:flex;gap:8px}
+.in{flex:1;background:var(--card);border:1px solid var(--line2);border-radius:12px;color:var(--ink);font:inherit;font-size:15px;padding:14px 16px;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0}
+.in::placeholder{color:var(--dim2)}
+.in:focus{border-color:#4a4a52;box-shadow:0 0 0 3px rgba(255,255,255,.04)}
+.btn{background:var(--ink);color:#0a0a0b;border:0;border-radius:12px;font:inherit;font-size:15px;font-weight:600;padding:13px 20px;display:inline-flex;align-items:center;line-height:1.2;cursor:pointer;white-space:nowrap;transition:transform .12s,opacity .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn[disabled]{opacity:.5;cursor:default;transform:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+.btn.ghost:hover{border-color:#4a4a52}
+.hint{margin-top:10px;font-size:12.5px;color:var(--dim2)}
+
+/* result card */
+.card{margin-top:16px;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:16px;display:none;animation:rise .4s cubic-bezier(.2,.7,.2,1)}
+.card.show{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card .hd{display:flex;gap:14px;align-items:center}
+.card .av{width:52px;height:52px;border-radius:12px;background:var(--card2);object-fit:cover;flex:none;border:1px solid var(--line)}
+.card .av.round{border-radius:50%}
+.card .nm{font-weight:620;font-size:18px;letter-spacing:-.01em;line-height:1.15}
+.card .sb{color:var(--dim);font-size:13px;margin-top:3px}
+.card .kd{margin-left:auto;font-size:12px;color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:4px 10px;flex:none}
+.card .kd.ok{color:var(--red);border-color:rgba(255,59,48,.45)}
+.card .facts{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;font-size:13px;color:var(--dim)}
+.card .facts b{display:block;color:var(--ink);font-weight:520}
+.card .line{margin-top:14px;background:#0f0f10;border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.card .line code{flex:1;font-family:Plex,monospace;font-size:13px;color:var(--ink);word-break:break-all}
+.card .line button{background:transparent;border:1px solid var(--line2);color:var(--dim);border-radius:8px;font:inherit;font-size:12px;padding:6px 10px;cursor:pointer}
+.card .line button:hover{color:var(--ink);border-color:#4a4a52}
+.card .go{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.card .note{margin-top:10px;font-size:12.5px;color:var(--dim2)}
+.card.err .nm{color:var(--dim)}
+
+/* show rows (right column) */
+.rows{display:flex;flex-direction:column;gap:12px;perspective:900px}
+.rows .lb{font-size:12.5px;color:var(--dim2);margin-bottom:2px}
+.srow{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .25s,background .25s;text-align:left;color:inherit;font:inherit;width:100%}
+.srow:hover{transform:translateY(-2px) scale(1.01);border-color:var(--line2);background:var(--card2)}
+.srow.lit{background:var(--card2);border-color:var(--line2);transform:scale(1.03);box-shadow:0 20px 40px -20px #000}
+.srow .n{font-weight:620;font-size:19px;letter-spacing:-.01em}
+.srow .h{color:var(--dim);font-size:13px;margin-top:2px}
+.srow .h i{font-style:normal;color:var(--dim2)}
+.srow .pair{display:flex;align-items:center;gap:10px}
+.srow .pair img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--card2)}
+.srow .pair .arr{color:var(--dim2);font-size:15px}
+.srow .pair .tile{width:38px;height:38px;border-radius:50%;background:#242428;display:grid;place-items:center}
+.srow .pair .tile img{width:24px;height:24px;border-radius:0;background:none}
+.srow .wave{width:96px;height:30px;display:block}
+.srow:not(.lit){opacity:.62}
+.srow:not(.lit):hover{opacity:1}
+.rows .fn{font-size:12px;color:var(--dim2);line-height:1.5;margin-top:4px}
+
+/* the read — demo strip */
+#read{position:relative;padding:0}
+.strip{position:relative;height:190px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:#0c0c0d}
+.strip canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.strip .head{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--red);box-shadow:0 0 14px rgba(255,59,48,.8);transform:translateX(-50%)}
+.strip .cap{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:14px;color:var(--dim);pointer-events:none}
+.strip .cap b{color:var(--ink);font-weight:560}
+.demo{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:26px 24px 6px}
+.demo .in{max-width:220px;flex:none;text-transform:uppercase;font-family:Plex,monospace;letter-spacing:.06em}
+.demo .say{color:var(--dim);font-size:14px;width:100%;text-align:center;margin-top:8px}
+.demo .say.on{color:var(--ink)}
+.demo .small{width:100%;text-align:center;font-size:12.5px;color:var(--dim2);margin-top:4px;padding-bottom:22px}
+
+/* sections */
+section{padding:96px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+.k{font-size:12.5px;color:var(--red);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+h2{font-size:clamp(28px,3.4vw,42px);font-weight:640;letter-spacing:-.03em;line-height:1.08;max-width:22ch}
+.sub{margin-top:14px;color:var(--dim);font-size:17px;max-width:60ch}
+.sub b{color:var(--ink);font-weight:560}
+
+.steps{margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+.step .no{font-family:Plex,monospace;font-size:12px;color:var(--dim2)}
+.step h3{margin-top:34px;font-size:22px;font-weight:620;letter-spacing:-.02em;line-height:1.15}
+.step p{margin-top:10px;color:var(--dim);font-size:14.5px}
+.step p b{color:var(--ink);font-weight:520}
+.step::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(255,59,48,.14),transparent 70%);opacity:0;transition:opacity .4s}
+.step:hover::after{opacity:1}
+
+.empty{margin-top:40px;background:var(--card);border:1px dashed var(--line2);border-radius:16px;padding:34px;text-align:center;color:var(--dim);font-size:16px}
+.empty b{color:var(--ink);display:block;font-size:22px;font-weight:620;letter-spacing:-.02em;margin-bottom:8px}
+
+table{width:100%;border-collapse:collapse;margin-top:40px;font-size:15px}
+th{text-align:left;font-size:12px;color:var(--dim2);font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:0 0 12px;border-bottom:1px solid var(--line2)}
+td{padding:16px 24px 16px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--dim)}
+td:first-child{color:var(--ink);font-weight:520;width:42%}
+td:last-child{padding-right:0}
+tr:last-child td{border-bottom:0}
+
+dl{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+dl div{padding:16px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:110px 1fr;gap:16px}
+dt{font-weight:600;letter-spacing:-.01em}
+dd{color:var(--dim);font-size:15px}
+dd b{color:var(--ink);font-weight:520}
+
+.names{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.name{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center}
+.name img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.name b{display:block;font-weight:620}
+.name span{color:var(--dim);font-size:13px}
+.fine{margin-top:22px;color:var(--dim2);font-size:13.5px;max-width:70ch;line-height:1.6}
+.fine b{color:var(--dim);font-weight:520}
+
+.ca{margin-top:40px;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:18px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.ca .dot{width:10px;height:10px;border-radius:50%;background:var(--dim2);flex:none}
+.ca .t{flex:1;min-width:240px}
+.ca .t b{display:block;font-weight:560}
+.ca .t span{color:var(--dim);font-size:14px}
+.ca code{font-family:Plex,monospace;font-size:13px;color:var(--dim2)}
+
+#end{padding:80px 0 110px;text-align:center}
+#end .mark{margin:0 auto 22px}
+#end p{color:var(--dim);font-size:15px}
+#end p b{color:var(--ink);font-weight:560}
+#end .x{margin-top:22px;display:inline-flex;gap:8px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:40px}
+  #top{padding-top:56px;min-height:0}
+  .steps,.names{grid-template-columns:1fr}
+  dl{grid-template-columns:1fr}
+  section{padding:64px 0}
+  .srow{grid-template-columns:1fr auto}
+  .srow .wave{display:none}
+  nav ul{gap:22px;padding:14px 16px}
+  .wrap{padding:0 16px}
+  td{display:block;padding:8px 0;width:auto}
+  td:first-child{width:auto;padding-top:16px}
+  td:last-child{padding-bottom:16px}
+  th{display:none}
+  .strip{height:150px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav id="nav"><ul>
+<li><a href="#top" class="on">Launch</a></li>
+<li><a href="#read">Read</a></li>
+<li><a href="#how">How</a></li>
+<li><a href="#board">Board</a></li>
+<li><a href="#words">Words</a></li>
+<li><a href="/docs.html">Docs</a></li>
+<li><a href="https://x.com/" target="_blank" rel="noopener">X</a></li>
+</ul></nav>
+
+<section id="top"><div class="wrap hero">
+  <div>
+    <img class="mark" src="/assets/mark.png" alt="">
+    <h1>Token fees, plugged <span class="air"><em>on air</em></span> by the host.</h1>
+    <div class="spec"><span>any podcast or stream</span><span>the fee buys the read</span><span>nothing to claim</span></div>
+    <p class="lead">Launch a coin on a show. <b>100% of the creator fee</b> buys that host's own ad read, at their own rate, the way any sponsor buys one. They say your ticker on air. <b>The receipt is the clip.</b></p>
+    <div class="ctl">
+      <label for="show">One input. The show.</label>
+      <div class="row">
+        <input class="in" id="show" placeholder="Apple / Spotify / RSS · twitch.tv/ · kick.com/ · youtube.com/@ · @handle" autocomplete="off" spellcheck="false">
+        <button class="btn" id="go">Plug it</button>
+      </div>
+      <div class="hint" id="hint">Nothing is launched from this page. It reads the show, writes the pairing line, and sends you to pump.fun with it.</div>
+      <div class="card" id="card"></div>
+    </div>
+  </div>
+  <div class="rows" id="rows">
+    <div class="lb">Shows you could launch on</div>
+    <button class="srow" data-u="https://x.com/joerogan"><div><div class="n">Joe Rogan</div><div class="h">@joerogan <i>· podcast</i></div></div><div class="pair"><img src="/assets/av/joerogan.jpg" alt=""><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+    <button class="srow lit" data-u="https://x.com/Cented7"><div><div class="n">Cented</div><div class="h">@Cented7 <i>· stream</i></div></div><div class="pair"><img src="/assets/av/Cented7.jpg" alt=""><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+    <button class="srow" data-u="https://x.com/blknoiz06"><div><div class="n">Ansem</div><div class="h">@blknoiz06 <i>· X Spaces</i></div></div><div class="pair"><img src="/assets/av/blknoiz06.jpg" alt=""><span class="arr">⇄</span><span class="tile"><img src="/assets/mark.png" alt=""></span></div><canvas class="wave" width="192" height="60"></canvas></button>
+    <div class="fn">Examples of the kind of show. None contacted, none endorsing anything, no coin launched on any of them. Click one to read it live.</div>
+  </div>
+</div></section>
+
+<div id="read">
+  <div class="strip"><canvas id="wave"></canvas><div class="head"></div><div class="cap" id="cap">The read, before the read. Type a ticker and <b>hear the shape</b>.</div></div>
+  <div class="demo">
+    <input class="in" id="tick" placeholder="TICKER" maxlength="10" autocomplete="off" spellcheck="false">
+    <button class="btn" id="hear">Hear it</button>
+    <button class="btn ghost" id="stop" style="display:none">Stop</button>
+    <div class="say" id="say">“This episode is brought to you by <b>$PLUG</b>.”</div>
+    <div class="small">This is your browser's voice, not a host's. Real reads are recorded by the host and posted as clips with a timestamp.</div>
+  </div>
+</div>
+
+<section id="how"><div class="wrap">
+  <div class="k">How it works</div>
+  <h2>One show. One fund. One read at a time.</h2>
+  <p class="sub">The pairing is written into the coin's own description line, so anyone can read it on pump.fun without asking us.</p>
+  <div class="steps">
+    <div class="step"><div class="no">01</div><h3>Pair the coin with a show</h3><p>Paste a podcast, a channel or a handle above. The description line becomes <b>plugs &lt;show&gt; via PLUG</b>. That line is the whole pairing. It never changes.</p></div>
+    <div class="step"><div class="no">02</div><h3>The fee fills the fund</h3><p><b>100% of the creator fee</b> accrues to that coin's fund. Not a pool, not a treasury, not a buyback. When the fund covers one read at the show's rate, a booking goes out at that rate, by the same email every other sponsor sends.</p></div>
+    <div class="step"><div class="no">03</div><h3>The host reads. The clip is the receipt.</h3><p>The read airs in their normal episode. PLUG posts <b>the clip, the timestamp and the episode link</b>. Then the fund starts from zero and waits for the next read.</p></div>
+  </div>
+</div></section>
+
+<section id="board"><div class="wrap">
+  <div class="k">Board</div>
+  <h2>Every coin, its show, its fund, its clips.</h2>
+  <p class="sub">The board lists bookings and declines with their dates, and links every clip. It shows a dash where no number exists yet. <b>A dash means no data. A zero means we measured and found nothing.</b></p>
+  <div class="empty"><b>Nothing to show.</b>No coin has launched, so there is no fund, no booking and no clip. The first row appears with the first coin.</div>
+  <div class="ca"><span class="dot"></span><div class="t"><b>Mint address</b><span>Appears here and in the pinned post at the same moment. Anyone posting one before that is scamming you.</span></div><code id="caline">— not yet —</code></div>
+</div></section>
+
+<section id="cannot"><div class="wrap">
+  <div class="k">Limits</div>
+  <h2>What it cannot do, so what it does.</h2>
+  <table>
+    <tr><th>It cannot</th><th>So it</th></tr>
+    <tr><td>make a host say yes</td><td>publishes every booking and every decline, with dates, contact details removed.</td></tr>
+    <tr><td>pay a show from a smart contract</td><td>names the person who sends the booking and pays the invoice, and shows the invoice.</td></tr>
+    <tr><td>verify that anyone listened</td><td>does not count listens. It links the episode and the timestamp and lets you press play.</td></tr>
+    <tr><td>buy half a read</td><td>waits until the fund covers a whole one at the show's rate. The wait is visible on the board.</td></tr>
+    <tr><td>re-pair a coin</td><td>doesn't. A stuck fund stays on the board as stuck. It is never pointed somewhere else.</td></tr>
+    <tr><td>read every platform from a server</td><td>says so on the card. Kick refuses server reads today; the pairing line still holds.</td></tr>
+  </table>
+</div></section>
+
+<section id="words"><div class="wrap">
+  <div class="k">Words</div>
+  <h2>A small dictionary, printed.</h2>
+  <dl>
+    <div><dt>plug</dt><dd>One sponsor read, bought at the show's rate.</dd></div>
+    <div><dt>fund</dt><dd>One coin's accrued creator fee. Spent only on plugs for that coin's show.</dd></div>
+    <div><dt>rate</dt><dd>Whatever the show charges any sponsor. <b>Never negotiated down, never paid over.</b></dd></div>
+    <div><dt>booking</dt><dd>The email, published with its date.</dd></div>
+    <div><dt>clip</dt><dd>The receipt: the episode link and the timestamp where the ticker is said.</dd></div>
+    <div><dt>decline</dt><dd>A published refusal. The fund stays where it is.</dd></div>
+    <div><dt>board</dt><dd>Every coin, its show, its fund, its clips. A dash where there is no data.</dd></div>
+    <div><dt>the line</dt><dd><b>plugs &lt;show&gt; via PLUG</b>, in the coin's description. The whole pairing.</dd></div>
+  </dl>
+</div></section>
+
+<section id="names"><div class="wrap">
+  <div class="k">The names on the banner</div>
+  <h2>Examples, not partners.</h2>
+  <div class="names">
+    <div class="name"><img src="/assets/av/joerogan.jpg" alt=""><div><b>Joe Rogan</b><span>@joerogan · a podcast</span></div></div>
+    <div class="name"><img src="/assets/av/Cented7.jpg" alt=""><div><b>Cented</b><span>@Cented7 · a stream</span></div></div>
+    <div class="name"><img src="/assets/av/blknoiz06.jpg" alt=""><div><b>Ansem</b><span>@blknoiz06 · an X Spaces host</span></div></div>
+  </div>
+  <p class="fine">They show the kind of show a coin could be launched on. <b>None of them have been contacted. None have agreed to anything. No coin has been launched on any of them.</b> Nothing on the banner or this page is a payout, a quote or an endorsement. If a coin launches on one of them and their booking address gets an email, that email is published like every other one. PLUG is not affiliated with any show, host or platform named here.</p>
+</div></section>
+
+<section id="end"><div class="wrap">
+  <img class="mark" src="/assets/mark.png" alt="">
+  <p><b>Launch a coin on any podcast or stream.</b><br>The creator fee buys the host's ad read. Your ticker, on their show, in their voice.</p>
+  <div class="x"><a class="btn" href="#top">Plug a show</a><a class="btn ghost" href="/docs.html">Read the docs</a></div>
+</div></section>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* nav */
+  const nav=$('#nav'); const links=$$('nav a[href^="#"]');
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  addEventListener('scroll',()=>{nav.classList.toggle('stuck',scrollY>10);
+    let cur=secs[0]; for(const s of secs){ if(s.getBoundingClientRect().top<=120) cur=s; }
+    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur.id));},{passive:true});
+
+  /* launch control */
+  const input=$('#show'), go=$('#go'), card=$('#card'), hint=$('#hint');
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function render(d){
+    card.className='card show'+(d.ok?'':' err');
+    if(!d.ok){
+      card.innerHTML=`<div class="hd"><div class="av"></div><div><div class="nm">Could not read that</div><div class="sb">${esc(d.reason||'the read failed')}${d.ms?` · ${d.ms} ms`:''}</div></div><span class="kd">${esc(d.kind||'unknown')}</span></div>
+      <div class="note">Nothing was invented. Try an Apple or Spotify link, an RSS feed, a twitch.tv or kick.com channel, a youtube.com/@handle, or an X handle.</div>`;
+      return;
+    }
+    const img=d.image?`<img class="av ${d.kind==='podcast'?'':'round'}" src="${esc(d.image)}" alt="" onerror="this.style.visibility='hidden'">`:`<div class="av"></div>`;
+    const facts=[['Kind',d.kind],['Rate',d.rate==='none published'?'none published · booked by email at whatever they charge':d.rate],
+      d.followers!=null?['Followers',Number(d.followers).toLocaleString('en-US')]:null, d.episodes!=null?['Episodes',d.episodes]:null,
+      ['Fund','— · nothing accrues until a mint exists'],['Read by',d.ms+' ms']].filter(Boolean);
+    card.innerHTML=`<div class="hd">${img}<div><div class="nm">${esc(d.title)}</div><div class="sb">${esc(d.handle||'')}</div></div><span class="kd ok">readable</span></div>
+      <div class="facts">${facts.map(([k,v])=>`<div>${esc(k)}<b>${esc(v)}</b></div>`).join('')}</div>
+      <div class="line"><code id="lineTxt">${esc(d.line)}</code><button id="copy" type="button">Copy</button></div>
+      <div class="go"><a class="btn" href="https://pump.fun/create" target="_blank" rel="noopener">Launch on pump.fun →</a><a class="btn ghost" href="${esc(d.url||'#')}" target="_blank" rel="noopener">Open the show</a></div>
+      <div class="note">${d.note?esc(d.note)+' · ':''}Paste the line into the coin's description. That is the pairing. It cannot be changed after launch.</div>`;
+    $('#copy').onclick=async()=>{ try{ await navigator.clipboard.writeText(d.line); $('#copy').textContent='Copied'; setTimeout(()=>$('#copy').textContent='Copy',1400);}catch{ $('#copy').textContent='Select it'; } };
+  }
+  async function resolve(){
+    const v=input.value.trim(); if(!v) { input.focus(); return; }
+    go.disabled=true; go.textContent='Reading…'; hint.textContent='Reading the show from this server. Nothing is launched.';
+    try{
+      const r=await fetch('/api/show?u='+encodeURIComponent(v),{cache:'no-store'});
+      const d=await r.json().catch(()=>({ok:false,reason:'the server answered with something that was not JSON'}));
+      render(d);
+    }catch{ render({ok:false,reason:'the reader is unreachable'}); }
+    go.disabled=false; go.textContent='Plug it';
+    hint.textContent='Nothing is launched from this page. It reads the show, writes the pairing line, and sends you to pump.fun with it.';
+  }
+  go.onclick=resolve; input.addEventListener('keydown',e=>{ if(e.key==='Enter') resolve(); });
+  $$('.srow').forEach(b=>b.onclick=()=>{ $$('.srow').forEach(x=>x.classList.remove('lit')); b.classList.add('lit'); input.value=b.dataset.u; resolve(); input.scrollIntoView({behavior:'smooth',block:'center'}); });
+
+  /* row waveforms */
+  $$('.srow .wave').forEach((c,i)=>{ const x=c.getContext('2d'); const n=30, seed=i*7+3; let t=0;
+    function draw(){ x.clearRect(0,0,c.width,c.height); const lit=c.closest('.srow').classList.contains('lit');
+      for(let k=0;k<n;k++){ const p=k/n; const h=(0.35+0.65*Math.abs(Math.sin(p*9+seed+t*(lit?0.05:0.01))))*c.height*0.9*(0.5+0.5*Math.abs(Math.sin(k*1.7+seed)));
+        const w=c.width/n; x.fillStyle=lit?(p<0.58?'#f5f5f5':'#4a4a50'):'#3a3a40'; x.beginPath(); x.roundRect(k*w+1,(c.height-h)/2,w-3,h,2); x.fill(); }
+      if(lit){ x.fillStyle='#ff3b30'; x.fillRect(c.width*0.58,0,2,c.height); }
+      t++; if(!reduced && !document.hidden) requestAnimationFrame(draw); }
+    draw(); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) draw(); }); });
+
+  /* the read: big waveform strip + speech demo */
+  const wc=$('#wave'), wx=wc.getContext('2d'); let W=0,H=0,dpr=1, bars=[], speaking=false, energy=0;
+  function size(){ dpr=Math.min(devicePixelRatio||1,2); W=wc.clientWidth; H=wc.clientHeight; wc.width=W*dpr; wc.height=H*dpr; wx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.ceil(W/7)+2; while(bars.length<n) bars.push(0.08+Math.random()*0.12); bars.length=n; }
+  size(); addEventListener('resize',size);
+  let phase=0;
+  function tick(){
+    energy+= ((speaking?1:0)-energy)*0.06; phase+=0.9;
+    if(phase>=7){ phase-=7; bars.shift(); const base=0.06+Math.random()*0.1; const burst=speaking?Math.pow(Math.random(),1.6)*0.9:Math.random()<0.03?Math.random()*0.35:0; bars.push(Math.min(1,base+burst)); }
+    wx.clearRect(0,0,W,H);
+    const n=bars.length, w=7; const centre=W/2;
+    for(let i=0;i<n;i++){ const x=i*w-phase; const v=bars[i]; const h=Math.max(3,v*H*0.72*(0.6+0.4*energy)+ (speaking?Math.sin(i*0.7+phase*0.3)*4:0));
+      const d=Math.abs(x-centre)/W; const a=Math.max(0.12,1-d*1.6); const past=x<centre;
+      wx.fillStyle=past?`rgba(245,245,245,${a})`:`rgba(120,120,128,${a*0.7})`; wx.beginPath(); wx.roundRect(x,(H-h)/2,w-2.5,h,2); wx.fill(); }
+    if(!reduced && !document.hidden) requestAnimationFrame(tick);
+  }
+  tick(); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) tick(); });
+
+  const tickIn=$('#tick'), hear=$('#hear'), stop=$('#stop'), say=$('#say'), cap=$('#cap');
+  const phrase=t=>`This episode is brought to you by ${t}.`;
+  function setSay(t){ say.innerHTML=`“This episode is brought to you by <b>$${esc(t)}</b>.”`; }
+  tickIn.addEventListener('input',()=>{ tickIn.value=tickIn.value.toUpperCase().replace(/[^A-Z0-9]/g,''); setSay(tickIn.value||'PLUG'); });
+  function speak(){
+    const t=(tickIn.value||'PLUG'); setSay(t);
+    if(!('speechSynthesis' in window)){ cap.innerHTML='This browser has no voice. <b>The shape still plays.</b>'; speaking=true; setTimeout(()=>speaking=false,2600); return; }
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(phrase('dollar '+t.split('').join(' '))); u.rate=0.95; u.pitch=1;
+    const vs=speechSynthesis.getVoices(); const v=vs.find(v=>/en/i.test(v.lang)&&/Google|Samantha|Daniel|Natural/i.test(v.name))||vs.find(v=>/en/i.test(v.lang)); if(v) u.voice=v;
+    u.onstart=()=>{ speaking=true; say.classList.add('on'); hear.style.display='none'; stop.style.display=''; cap.innerHTML=`Saying it. <b>$${esc(t)}</b>, out loud, in a browser.`; };
+    u.onend=u.onerror=()=>{ speaking=false; say.classList.remove('on'); hear.style.display=''; stop.style.display='none'; cap.innerHTML=`That was the shape. <b>The real one is a host, on their show, with a timestamp.</b>`; };
+    speechSynthesis.speak(u);
+  }
+  hear.onclick=speak; stop.onclick=()=>{ speechSynthesis.cancel(); speaking=false; };
+  tickIn.addEventListener('keydown',e=>{ if(e.key==='Enter') speak(); });
+  if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=()=>{};
+})();
+</script>
+</body>
+</html>

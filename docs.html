@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLUG — docs</title>
+<meta name="description" content="How PLUG works: the pairing line, the fund, the booking, the clip, the declines, and what is not verifiable today.">
+<link rel="icon" href="/assets/icon-32.png">
+<style>
+@font-face{font-family:Inter;src:url(/assets/inter.woff2) format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:Plex;src:url(/assets/plexmono.woff2) format('woff2');font-weight:400;font-display:swap}
+:root{--bg:#0a0a0b;--ink:#f5f5f5;--dim:#8d8d93;--dim2:#55555b;--card:#151516;--line:#232326;--line2:#2e2e33;--red:#ff3b30;--grid:#151517}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:16.5px;line-height:1.6;letter-spacing:-.005em}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 50% at 50% 20%,#000 30%,transparent 100%);mask-image:radial-gradient(ellipse 70% 50% at 50% 20%,#000 30%,transparent 100%)}
+a{color:inherit}
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(10,10,11,.72);border-bottom:1px solid var(--line)}
+nav ul{list-style:none;display:flex;justify-content:center;gap:34px;padding:18px 24px;flex-wrap:wrap}
+nav a{font-size:14px;color:var(--dim);font-weight:500;text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
+nav a:hover,nav a.on{color:var(--ink)} nav a.on{border-bottom-color:var(--red)}
+main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:72px 24px 120px}
+.k{font-size:12.5px;color:var(--red);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+h1{font-size:clamp(34px,5vw,52px);font-weight:640;letter-spacing:-.035em;line-height:1.04}
+.lead{margin-top:18px;color:var(--dim);font-size:19px}
+h2{margin-top:64px;font-size:26px;font-weight:620;letter-spacing:-.025em;padding-top:28px;border-top:1px solid var(--line)}
+p{margin-top:14px;color:var(--dim)} p b{color:var(--ink);font-weight:560}
+code{font-family:Plex,ui-monospace,monospace;font-size:14px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink)}
+.box{margin-top:18px;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:18px 20px;color:var(--dim)}
+.box b{color:var(--ink);font-weight:560}
+ol{margin:14px 0 0 22px;color:var(--dim)} li{margin-top:8px} li b{color:var(--ink);font-weight:560}
+.faq div{padding:18px 0;border-bottom:1px solid var(--line)} .faq dt{font-weight:600} .faq dd{color:var(--dim);margin-top:6px}
+</style>
+</head>
+<body>
+<nav><ul>
+<li><a href="/#top">Launch</a></li><li><a href="/#read">Read</a></li><li><a href="/#how">How</a></li><li><a href="/#board">Board</a></li><li><a href="/#words">Words</a></li><li><a href="/docs.html" class="on">Docs</a></li><li><a href="https://x.com/" target="_blank" rel="noopener">X</a></li>
+</ul></nav>
+<main>
+<div class="k">Docs</div>
+<h1>Launch a coin on a show. The fee buys the read.</h1>
+<p class="lead">This page is the specification. Where the site's behaviour differs from it, the site is wrong and this page wins.</p>
+
+<h2>1. The pairing</h2>
+<p>A coin is paired to exactly one show by its pump.fun description line: <code>plugs &lt;show&gt; via PLUG</code>. The show is a podcast (Apple, Spotify or RSS), a channel (Twitch, Kick, YouTube) or an X account that hosts Spaces. The line is written at launch and is never changed, because a coin that can be re-pointed is a coin that can be pointed at the developer's friend.</p>
+<p>The reader on the front page resolves a show from a link and writes the line for you. It reads from this server; where a platform refuses server reads (Kick does today), the card says so and the line still holds.</p>
+
+<h2>2. The fund</h2>
+<p><b>100% of the coin's creator fee</b> accrues to that coin's fund. There is no shared pool, no treasury, no buyback and no team cut from the fund. One coin, one show, one fund.</p>
+
+<h2>3. The booking</h2>
+<p>When a fund covers one read at the show's rate, PLUG books it. A show with a published rate card is booked at the card. A show that sells through a marketplace is booked through the marketplace. A show with no public rate receives an email to its published booking address offering the fund's balance for one read. It is the same email any sponsor sends. The host is not asked to join, sign, or hold anything.</p>
+<div class="box"><b>A person sends the booking and pays the invoice.</b> No wallet can do this. The person's name is published. Every booking is published with its date, and every reply with its date, contact details removed.</div>
+
+<h2>4. The clip</h2>
+<p>The read airs in the show's normal episode. PLUG posts the clip, the timestamp and the episode link. That post is the payout. The fund then starts from zero.</p>
+
+<h2>5. Declines</h2>
+<p>If a show declines, does not reply within 14 days, or accepts and later withdraws, the decline is published with its date. <b>The fund does not move.</b> It is not redirected. It stays on the board as stuck until the show's answer changes. A stuck fund is a truthful state and is shown as one.</p>
+
+<h2>6. The board</h2>
+<p>The board lists every coin, its show, its fund, its bookings, its declines and its clips. A dash means no number exists. A zero means we measured and found nothing. The board never shows a zero it did not measure, and never shows a balance, a projection or an example before a mint exists.</p>
+
+<h2>7. The mint</h2>
+<p>The mint address appears on the front page and in the pinned post at the same moment. Until then there is no token. Anyone posting an address before that is scamming you.</p>
+
+<h2>8. What is not verifiable today</h2>
+<ol>
+<li><b>That the invoice was paid.</b> The receipt is the clip; if a fund covers a read and no booking is published, the gap is visible and is the accusation.</li>
+<li><b>That the host said it because of the booking.</b> Hosts say what they want. PLUG buys the slot; the words are theirs.</li>
+<li><b>Listens.</b> Not counted. The episode link and timestamp are provided and you press play.</li>
+<li><b>Server reads of every platform.</b> Kick refuses them today. The pairing line does not depend on the reader.</li>
+</ol>
+
+<h2>9. The names on the site</h2>
+<p>Joe Rogan, Cented and Ansem appear as examples of the kind of show a coin could be launched on. None have been contacted. None have agreed to anything. No coin has been launched on any of them. Nothing shown is a payout, a quote or an endorsement. PLUG is not affiliated with any show, host or platform.</p>
+
+<h2>10. Questions</h2>
+<dl class="faq">
+<div><dt>Does the host have to do anything?</dt><dd>No.</dd></div>
+<div><dt>Is there anything to claim?</dt><dd>No.</dd></div>
+<div><dt>Can the pairing be changed after launch?</dt><dd>No.</dd></div>
+<div><dt>Does PLUG take a cut of the fund?</dt><dd>No.</dd></div>
+<div><dt>What if the show costs more than the fund will ever reach?</dt><dd>Then the fund waits, and the board shows it waiting. Pick a show you can afford.</dd></div>
+<div><dt>Is "hear it" on the front page a real read?</dt><dd>No. It is the browser's voice, labelled as such. Real reads are clips with timestamps.</dd></div>
+</dl>
+</main>
+</body>
+</html>
